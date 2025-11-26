@@ -1,5 +1,5 @@
 #import "AudioManager.h"
-#import "AudioProcessingAdapter.h"
+#if __has_include(<WebRTC/RTCAudioRenderer.h>)
 
 @implementation AudioManager {
   RTCDefaultAudioProcessingModule* _audioProcessingModule;
@@ -48,3 +48,20 @@
 }
 
 @end
+
+#else
+
+@implementation AudioManager
++ (instancetype)sharedInstance {
+  static dispatch_once_t onceToken;
+  static AudioManager* sharedInstance = nil;
+  dispatch_once(&onceToken, ^{
+    sharedInstance = [[self alloc] init];
+  });
+  return sharedInstance;
+}
+- (void)addLocalAudioRenderer:(id)renderer {}
+- (void)removeLocalAudioRenderer:(id)renderer {}
+@end
+
+#endif

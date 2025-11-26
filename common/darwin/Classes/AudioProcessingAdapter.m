@@ -1,4 +1,6 @@
 #import "AudioProcessingAdapter.h"
+
+#if __has_include(<WebRTC/RTCAudioRenderer.h>)
 #import <WebRTC/RTCAudioRenderer.h>
 #import <os/lock.h>
 
@@ -102,4 +104,15 @@
   os_unfair_lock_unlock(&_lock);
 }
 
+@end
+
+
+#else
+
+@implementation AudioProcessingAdapter
+- (instancetype)init { return [super init]; }
+- (void)addProcessing:(id<ExternalAudioProcessingDelegate>)processor {}
+- (void)removeProcessing:(id<ExternalAudioProcessingDelegate>)processor {}
+- (void)addAudioRenderer:(id)renderer {}
+- (void)removeAudioRenderer:(id)renderer {}
 @end
